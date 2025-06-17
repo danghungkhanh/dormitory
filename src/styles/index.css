@@ -1,0 +1,333 @@
+/* Main Styles */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.8rem;
+}
+
+/* Dashboard */
+.jumbotron {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    margin-bottom: 2rem;
+    padding: 2rem;
+}
+
+.logo-container {
+    max-width: 400px;
+    margin: 0 auto 1.5rem;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    margin-bottom: 1.5rem;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0 !important;
+    font-weight: bold;
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+}
+
+/* Forms */
+.form-label {
+    font-weight: 500;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    border-color: #86b7fe;
+}
+
+/* Room status colors */
+.status-empty {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.status-occupied {
+    background-color: #cfe2ff;
+    color: #084298;
+}
+
+.status-full {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.status-maintenance {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+/* Admin panels */
+.admin-dashboard-card {
+    min-height: 160px;
+}
+
+.admin-dashboard-card .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.admin-stat {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+/* Payment status */
+.payment-pending {
+    color: #664d03;
+}
+
+.payment-completed {
+    color: #0f5132;
+}
+
+.payment-overdue {
+    color: #842029;
+}
+
+/* Print styles */
+@media print {
+    header, footer, .no-print {
+        display: none !important;
+    }
+    
+    body {
+        background-color: #fff;
+    }
+    
+    .container {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+}
+
+/* Custom button styles */
+.btn-custom-primary {
+    background-color: #006A4E;
+    border-color: #006A4E;
+    color: white;
+}
+
+.btn-custom-primary:hover {
+    background-color: #005541;
+    border-color: #005541;
+    color: white;
+}
+
+.logo-container {
+    width: 100%;
+    overflow: hidden; /* Đảm bảo không có cuộn */
+}
+
+.logo-container img {
+    width: 100%; /* Đặt chiều rộng hình ảnh là 100% */
+    height: auto; /* Giữ tỷ lệ khung hình */
+    display: block; /* Đảm bảo không có khoảng trống bên dưới hình ảnh */
+}
+
+/* Payment Room Specific Styles */
+.payment-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.payment-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: left;
+    padding: 10px 15px;
+    background-color: #1976d2;
+    color: white;
+    border-radius: 8px;
+    font-family: "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif;
+}
+
+.payment-alert {
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid transparent;
+}
+
+.payment-alert.error {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.payment-alert.success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.registration-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.registration-card {
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 25px; /* Trả về padding ban đầu */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 2px solid #0066cc;
+}
+
+.card-section {
+    margin-bottom: 20px; /* Trả về margin-bottom ban đầu */
+    border: 1px solid #0066cc; /* Giữ viền màu xanh */
+    border-radius: 8px; /* Giữ border-radius ban đầu */
+    padding: 15px;
+}
+
+.card-section:first-of-type {
+    padding-top: 25px;
+}
+
+.card-section:last-child {
+    margin-bottom: 0;
+    padding-bottom: 25px;
+}
+
+.section-title {
+    font-weight: bold;
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+    color: #000000;
+    background-color: transparent;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 5px;
+    border-radius: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+}
+
+.payment-button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.payment-button {
+    background-color: #3b82f6;
+    color: white;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.payment-button:hover {
+    background-color: #2563eb;
+}
+
+.payment-button:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+}
+
+.full-payment-message {
+    margin-top: 15px;
+    color: #047857;
+    font-weight: bold;
+}
+
+.confirmation-dialog {
+    background-color: #fff;
+    padding: 30px; /* Trả về padding ban đầu */
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    margin-top: 30px;
+    border: 2px solid #0066cc;
+}
+
+.confirmation-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 15px; /* Trả về margin-bottom ban đầu */
+    text-align: left;
+    background-color: transparent; /* Loại bỏ nền xanh */
+    color: inherit; /* Trả về màu chữ mặc định */
+    border-radius: 0; /* Loại bỏ bo góc */
+}
+
+.confirmation-text {
+    margin-bottom: 20px;
+    line-height: 1.6;
+    /* padding: 15px; - Loại bỏ padding */
+}
+
+.highlight-text {
+    font-weight: bold;
+}
+
+.dialog-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    /* padding: 15px; - Loại bỏ padding */
+    /* border-top: 1px solid #e0e0e0; - Loại bỏ border */
+}
+
+.dialog-button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.dialog-button.cancel {
+    background-color: #d1d5db;
+    color: #374151;
+}
+
+.dialog-button.cancel:hover {
+    background-color: #9ca3af;
+}
+
+.dialog-button.confirm {
+    background-color: #10b981;
+    color: white;
+}
+
+.dialog-button.confirm:hover {
+    background-color: #059669;
+} 
