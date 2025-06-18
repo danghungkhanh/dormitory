@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         // Check if payment already exists
-        $sql_check_payment = "SELECT COUNT(*) FROM payments WHERE user_id = ? AND room_id = ? AND payment_type = ? AND YEAR(payment_date) = ? AND MONTH(payment_date) = ? AND status = 'completed'";
+        $sql_check_payment = "SELECT COUNT(*) FROM payments WHERE user_id = ? AND room_id = ? AND payment_type = ? AND YEAR(payment_date) = ? AND MONTH(payment_date) = ? AND status = 'paid'";
         $stmt_check_payment = $pdo->prepare($sql_check_payment);
         $stmt_check_payment->execute([$user_id, $room_id, $payment_type, $year, $month]);
         $count = $stmt_check_payment->fetchColumn();
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $sql_insert_payment = "INSERT INTO payments (user_id, room_id, payment_type, amount, payment_date, status) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt_insert_payment = $pdo->prepare($sql_insert_payment);
-        $payment_status = 'completed';
+        $payment_status = 'paid';
         $payment_date_for_bill = date('Y-m-d', mktime(0, 0, 0, $month, 1, $year)); // Sử dụng tháng và năm của hóa đơn
 
         $stmt_insert_payment->execute([$user_id, $room_id, $payment_type, $amount, $payment_date_for_bill, $payment_status]);
@@ -75,9 +75,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $room_id = $room_data['room_id'];
 
-        $sql_latest_reading = "SELECT electricity_kwh, month, year FROM utility_readings WHERE room_id = ? ORDER BY year DESC, month DESC LIMIT 1";
+        $sql_latest_reading = "SELECT electricity_kwh, month, year FROM utility_readings WHERE room_id = ? AND student_id = ? ORDER BY year DESC, month DESC LIMIT 1";
         $stmt_latest_reading = $pdo->prepare($sql_latest_reading);
-        $stmt_latest_reading->execute([$room_id]);
+        $stmt_latest_reading->execute([$room_id, $user['student_id']]);
         $latest_reading = $stmt_latest_reading->fetch(PDO::FETCH_ASSOC);
 
         if (!$latest_reading) {
@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $electricity_cost = $electricity_kwh * 1000; // 1.000 VNĐ/kWh
 
         $electricity_paid = false;
-        $sql_check_paid = "SELECT COUNT(*) FROM payments WHERE user_id = ? AND room_id = ? AND payment_type = 'electricity' AND YEAR(payment_date) = ? AND MONTH(payment_date) = ? AND status = 'completed'";
+        $sql_check_paid = "SELECT COUNT(*) FROM payments WHERE user_id = ? AND room_id = ? AND payment_type = 'electricity' AND YEAR(payment_date) = ? AND MONTH(payment_date) = ? AND status = 'paid'";
         $stmt_check_paid = $pdo->prepare($sql_check_paid);
         $stmt_check_paid->execute([$user['user_id'], $room_id, $bill_year, $bill_month]);
         $count_paid = $stmt_check_paid->fetchColumn();

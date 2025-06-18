@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        // Lấy room_id từ student_id
+        // Lấy room_id từ student_id với đăng ký phòng mới nhất (không kiểm tra status)
         $sql_get_room_id = "SELECT room_id FROM dorm_registrations WHERE student_id = ? ORDER BY registration_date DESC LIMIT 1";
         $stmt_get_room_id = $pdo->prepare($sql_get_room_id);
         $stmt_get_room_id->execute([$student_id]);
@@ -37,9 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $room_id = $room_data['room_id'];
 
         // Kiểm tra xem đã có bản ghi cho tháng và năm này chưa
-        $sql_check = "SELECT id FROM utility_readings WHERE room_id = ? AND month = ? AND year = ?";
+        $sql_check = "SELECT id FROM utility_readings WHERE room_id = ? AND month = ? AND year = ? AND student_id = ?";
         $stmt_check = $pdo->prepare($sql_check);
-        $stmt_check->execute([$room_id, $month, $year]);
+        $stmt_check->execute([$room_id, $month, $year, $student_id]);
         $existing_reading = $stmt_check->fetch();
 
         if ($existing_reading) {
@@ -50,9 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             sendResponse(true, 'Cập nhật dữ liệu sử dụng điện nước thành công!');
         } else {
             // Chèn bản ghi mới
-            $sql_insert = "INSERT INTO utility_readings (room_id, month, year, electricity_kwh, water_m3) VALUES (?, ?, ?, ?, ?)";
+            $sql_insert = "INSERT INTO utility_readings (student_id, room_id, month, year, electricity_kwh, water_m3) VALUES (?, ?, ?, ?, ?, ?)";
             $stmt_insert = $pdo->prepare($sql_insert);
-            $stmt_insert->execute([$room_id, $month, $year, $electricity_kwh, $water_m3]);
+            $stmt_insert->execute([$student_id, $room_id, $month, $year, $electricity_kwh, $water_m3]);
             sendResponse(true, 'Thêm dữ liệu sử dụng điện nước thành công!');
         }
     } catch (PDOException $e) {
@@ -61,29 +61,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
-        // Admin có thể xem tất cả các bản ghi sử dụng điện nước, cố gắng lấy thông tin sinh viên liên quan
+        // Lấy tất cả các bản ghi sử dụng điện nước, cố gắng lấy thông tin sinh viên liên quan
         $sql_get_readings = "
             SELECT 
                 ur.*, 
                 r.room_number, 
-                dr.student_id, 
-                u.fullname 
+                ur.student_id,
+                u.fullname AS fullname
             FROM 
                 utility_readings ur 
             JOIN 
                 rooms r ON ur.room_id = r.id 
             LEFT JOIN 
-                dorm_registrations dr ON ur.room_id = dr.room_id 
-                                        AND MONTH(dr.registration_date) = ur.month 
-                                        AND YEAR(dr.registration_date) = ur.year
-            LEFT JOIN 
-                users u ON dr.student_id = u.student_id
+                users u ON ur.student_id = u.student_id
             ORDER BY 
                 ur.year DESC, ur.month DESC, r.room_number ASC";
-        
         $stmt = $pdo->query($sql_get_readings);
         $readings = $stmt->fetchAll();
-        
         sendResponse(true, 'Danh sách dữ liệu sử dụng điện nước', $readings);
     } catch (PDOException $e) {
         sendResponse(false, 'Lỗi cơ sở dữ liệu: ' . $e->getMessage());

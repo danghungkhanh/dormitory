@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt_update_reg->execute([$new_paid_amount, $registration_id]);
 
         // Ghi lại giao dịch vào bảng payments
-        $sql_insert_payment = "INSERT INTO payments (user_id, room_id, payment_type, amount, payment_date, status) VALUES (?, ?, ?, ?, CURDATE(), 'completed')";
+        $sql_insert_payment = "INSERT INTO payments (user_id, room_id, payment_type, amount, payment_date, status) VALUES (?, ?, ?, ?, CURDATE(), 'paid')";
         $stmt_insert_payment = $pdo->prepare($sql_insert_payment);
         $payment_type = 'room'; // Always 'room' for this API
         $stmt_insert_payment->execute([$user_id, $room_id, $payment_type, $amount_to_pay]);
