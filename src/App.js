@@ -6,12 +6,15 @@ import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Login from './components/Login';
 import Register from './components/Register';
+import ForgotPassword from './components/ForgotPassword';
 import Dashboard from './components/Dashboard';
 import DormRegister from './components/DormRegister';
 import PaymentRoom from './components/PaymentRoom';
 import PaymentElectricity from './components/PaymentElectricity';
 import PaymentWater from './components/PaymentWater';
 import AdminDashboard from './components/admin/AdminDashboard';
+import StudentProfile from './components/StudentProfile';
+import ChangePassword from './components/ChangePassword';
 
 const theme = createTheme({
   palette: {
@@ -49,12 +52,15 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} setIsAdmin={setIsAdmin} />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dorm-register" element={<DormRegister />} />
         <Route path="/payment-room" element={<PaymentRoom />} />
         <Route path="/payment-electricity" element={<PaymentElectricity />} />
         <Route path="/payment-water" element={<PaymentWater />} />
         <Route path="/admin/*" element={<AdminDashboard />} />
+        <Route path="/profile" element={<StudentProfile />} />
+        <Route path="/change-password" element={<ChangePassword />} />
       </Routes>
     </ThemeProvider>
   );

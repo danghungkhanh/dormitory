@@ -147,3 +147,5 @@ INSERT INTO `rooms` (`dorm_id`, `room_number`, `room_type_id`, `capacity`, `curr
 
 INSERT INTO `dorm_registrations` (`student_id`, `full_name`, `dorm_id`, `room_type_id`, `room_id`, `check_in_date`, `duration`, `status`, `paid_amount`) VALUES
 ('admin001', 'Admin User', 1, 1, 1, '2024-01-01', 1, 'approved', 0.00);
+USE dormitory_db;
+ALTER TABLE payments MODIFY COLUMN payment_type ENUM('room', 'electricity', 'water', 'other', 'laundry') NOT NULL;

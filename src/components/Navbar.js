@@ -181,6 +181,7 @@ function Navbar({ isLoggedIn, isAdmin, setIsLoggedIn, setIsAdmin }) {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
+                <MenuItem onClick={() => { navigate('/profile'); handleCloseUserMenu(); }}>Hồ sơ sinh viên</MenuItem>
                 <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
               </Menu>
             </Box>

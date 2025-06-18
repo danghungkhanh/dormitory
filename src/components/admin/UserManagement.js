@@ -19,6 +19,7 @@ import {
   DialogActions,
 } from '@mui/material';
 import axios from 'axios';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function UserManagement() {
   const [userData, setUserData] = useState(null);
@@ -31,6 +32,9 @@ function UserManagement() {
     fullname: '',
     phone: '',
   });
+  const [deleteDialog, setDeleteDialog] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
+  const [deleteError, setDeleteError] = useState('');
 
   useEffect(() => {
     fetchUserData();
@@ -105,6 +109,32 @@ function UserManagement() {
     }
   };
 
+  const handleDeleteClick = (user) => {
+    setUserToDelete(user);
+    setDeleteError('');
+    setDeleteDialog(true);
+  };
+
+  const handleDeleteUser = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+        'http://localhost:80/project3/api/admin/delete_user.php',
+        { user_id: userToDelete.id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (response.data.success) {
+        setDeleteDialog(false);
+        setUserToDelete(null);
+        fetchUserData();
+      } else {
+        setDeleteError(response.data.message || 'Xóa người dùng thất bại');
+      }
+    } catch (err) {
+      setDeleteError('Có lỗi xảy ra khi xóa người dùng');
+    }
+  };
+
   if (loading) {
     return (
       <Container sx={{ mt: 4, textAlign: 'center' }}>
@@ -166,9 +196,19 @@ function UserManagement() {
                         variant="outlined"
                         size="small"
                         onClick={() => handleEditClick(user)}
-                        sx={{ mt: 1 }}
+                        sx={{ mt: 1, mr: 1 }}
                       >
                         Chỉnh sửa
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        color="error"
+                        startIcon={<DeleteIcon />}
+                        onClick={() => handleDeleteClick(user)}
+                        sx={{ mt: 1 }}
+                      >
+                        Xóa
                       </Button>
                     </ListItem>
                     <Divider component="li" sx={{ mt: 1 }} />
@@ -215,6 +255,19 @@ function UserManagement() {
           <Button onClick={handleEditSubmit} variant="contained" color="primary">
             Lưu thay đổi
           </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Delete Dialog */}
+      <Dialog open={deleteDialog} onClose={() => setDeleteDialog(false)}>
+        <DialogTitle>Xác nhận xóa người dùng</DialogTitle>
+        <DialogContent>
+          <Typography>Bạn có chắc chắn muốn xóa người dùng <b>{userToDelete?.fullname}</b> ({userToDelete?.student_id}) không?</Typography>
+          {deleteError && <Alert severity="error" sx={{ mt: 2 }}>{deleteError}</Alert>}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialog(false)}>Hủy</Button>
+          <Button onClick={handleDeleteUser} color="error" variant="contained">Xóa</Button>
         </DialogActions>
       </Dialog>
     </Container>

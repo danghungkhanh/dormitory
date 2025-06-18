@@ -11,13 +11,15 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 
-function Login({ setIsLoggedIn, setIsAdmin }) {
+function ForgotPassword() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
+    student_id: '',
     email: '',
-    password: '',
   });
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [newPassword, setNewPassword] = useState('');
 
   const handleChange = (e) => {
     setFormData({
@@ -28,9 +30,13 @@ function Login({ setIsLoggedIn, setIsAdmin }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
+    setNewPassword('');
+
     try {
       const response = await axios.post(
-        'http://localhost:80/project3/api/login.php',
+        'http://localhost:80/project3/api/forgot_password.php',
         formData,
         {
           headers: {
@@ -38,25 +44,16 @@ function Login({ setIsLoggedIn, setIsAdmin }) {
           },
         }
       );
-      if (response.data.success) {
-        localStorage.setItem('token', response.data.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.data.user));
-        
-        setIsLoggedIn(true);
-        setIsAdmin(response.data.data.user.is_admin === 1);
 
-        // Kiểm tra quyền admin để chuyển hướng
-        if (response.data.data.user.is_admin === 1) {
-          navigate('/'); // Admin cũng về trang chủ
-        } else {
-          navigate('/'); // Người dùng thường về trang chủ
-        }
+      if (response.data.success) {
+        setSuccess('Mật khẩu mới đã được tạo thành công.');
+        setNewPassword(response.data.data.new_password);
       } else {
-        setError(response.data.message || 'Đăng nhập thất bại');
+        setError(response.data.message || 'Có lỗi xảy ra khi tạo mật khẩu mới.');
       }
     } catch (err) {
-      console.error('Lỗi đăng nhập:', err);
-      setError('Có lỗi xảy ra khi đăng nhập');
+      console.error('Lỗi:', err);
+      setError('Có lỗi xảy ra khi kết nối với máy chủ.');
     }
   };
 
@@ -64,7 +61,7 @@ function Login({ setIsLoggedIn, setIsAdmin }) {
     <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom align="center">
-          Đăng nhập
+          Quên mật khẩu
         </Typography>
 
         {error && (
@@ -73,13 +70,26 @@ function Login({ setIsLoggedIn, setIsAdmin }) {
           </Alert>
         )}
 
+        {success && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            {success}
+          </Alert>
+        )}
+
+        {newPassword && (
+          <Alert severity="info" sx={{ mb: 2 }}>
+            Mật khẩu mới của bạn là: <strong>{newPassword}</strong>
+            <br />
+            Vui lòng đăng nhập lại với mật khẩu mới này.
+          </Alert>
+        )}
+
         <Box component="form" onSubmit={handleSubmit}>
           <TextField
             fullWidth
-            label="Email"
-            name="email"
-            type="email"
-            value={formData.email}
+            label="Mã số sinh viên"
+            name="student_id"
+            value={formData.student_id}
             onChange={handleChange}
             margin="normal"
             required
@@ -87,10 +97,10 @@ function Login({ setIsLoggedIn, setIsAdmin }) {
 
           <TextField
             fullWidth
-            label="Mật khẩu"
-            name="password"
-            type="password"
-            value={formData.password}
+            label="Email"
+            name="email"
+            type="email"
+            value={formData.email}
             onChange={handleChange}
             margin="normal"
             required
@@ -103,25 +113,16 @@ function Login({ setIsLoggedIn, setIsAdmin }) {
             size="large"
             sx={{ mt: 3 }}
           >
-            Đăng nhập
+            Lấy mật khẩu mới
           </Button>
 
           <Button
             fullWidth
             variant="text"
-            onClick={() => navigate('/register')}
+            onClick={() => navigate('/login')}
             sx={{ mt: 1 }}
           >
-            Chưa có tài khoản? Đăng ký ngay
-          </Button>
-
-          <Button
-            fullWidth
-            variant="text"
-            onClick={() => navigate('/forgot-password')}
-            sx={{ mt: 1 }}
-          >
-            Quên mật khẩu?
+            Quay lại đăng nhập
           </Button>
         </Box>
       </Paper>
@@ -129,4 +130,4 @@ function Login({ setIsLoggedIn, setIsAdmin }) {
   );
 }
 
-export default Login; 
+export default ForgotPassword; 

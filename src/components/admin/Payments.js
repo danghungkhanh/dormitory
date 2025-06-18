@@ -154,7 +154,7 @@ function Payments() {
                   <TableCell>{debt.electricity_debt.toLocaleString('vi-VN')} VNĐ</TableCell>
                   <TableCell>{debt.water_debt.toLocaleString('vi-VN')} VNĐ</TableCell>
                   <TableCell>
-                    {(debt.room_debt + debt.electricity_debt + debt.water_debt).toLocaleString('vi-VN')} VNĐ
+                    {(Number(debt.room_debt) + Number(debt.electricity_debt) + Number(debt.water_debt)).toLocaleString('vi-VN')} VNĐ
                   </TableCell>
                 </TableRow>
               ))}
